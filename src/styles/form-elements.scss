@@ -1,0 +1,12 @@
+@mixin input {
+    height: 40px;
+    border: 1px solid #cdcfd4;
+    margin: 0;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Rubik', sans-serif;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}

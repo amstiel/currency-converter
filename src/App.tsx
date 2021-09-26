@@ -1,9 +1,14 @@
 import React, { FC } from 'react';
-import './App.css';
 import { ConverterForm } from './components/ConverterForm/ConverterForm';
+import { AppHeader } from './components/AppHeader/AppHeader';
+import { Container } from './components/Container/Container';
 
 export const App: FC = () => (
     <main className="App">
-        <ConverterForm />
+        <AppHeader />
+
+        <Container>
+            <ConverterForm />
+        </Container>
     </main>
 );

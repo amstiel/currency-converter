@@ -1,0 +1,63 @@
+@use '../../styles/form-elements' as elements;
+
+.root {
+    background-color: white;
+    border: 1px solid #cdcfd4;
+    border-radius: 5px;
+    padding: 48px;
+    margin: 0;
+}
+
+.switchButton {
+    color: var(--primary-action-color);
+    background-color: var(--primary-background-color);
+    border: 1px solid var(--primary-action-color);
+    cursor: pointer;
+    border-radius: 5px;
+    height: 40px;
+    width: 40px;
+
+    svg {
+        width: 18px;
+    }
+}
+
+.buttonContainer {
+    margin-top: 23px;
+}
+
+.amountInput {
+    @include elements.input;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.formControl {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.formLabel {
+    font-weight: 500;
+    margin-bottom: 4px;
+    margin-left: 12px;
+}
+
+.controlsContainer {
+    display: grid;
+    grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) auto minmax(100px, 1fr);
+    grid-gap: 24px;
+}
+
+.currencySelect {
+    @include elements.input;
+
+    option {
+        font-size: 12px;
+    }
+}

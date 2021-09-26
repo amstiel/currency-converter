@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { useStore } from 'effector-react';
 
 import {
@@ -10,7 +10,9 @@ import {
 } from '../../store/rates';
 import { $currencies, fetchCurrenciesFx } from '../../store/currencies';
 
-import switchLogo from '../../assets/icons/switch.svg';
+import styles from './ConverterForm.module.scss';
+import { ReactComponent as SwitchLogo } from '../../assets/icons/switch.svg';
+import { formatFloat } from '../../utils/strings';
 
 export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
@@ -32,54 +34,96 @@ export const ConverterForm: FC = () => {
         fetchCurrenciesFx();
     }, []);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-        e.preventDefault();
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        const newVal = Number(e.currentTarget.value);
+        setInputValue(newVal < 0 ? Math.abs(newVal) : newVal);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => {
-                    setInputValue(Number(e.currentTarget.value));
-                }}
-            />
+        <fieldset className={styles.root}>
+            <div className={styles.controlsContainer}>
+                <label className={styles.formControl} htmlFor="converter-form-amount">
+                    <span className={styles.formLabel}>Сумма</span>
+                    <input
+                        id="converter-form-amount"
+                        type="number"
+                        className={styles.amountInput}
+                        value={inputValue}
+                        onChange={handleInputChange}
+                    />
+                </label>
 
-            <select
-                name="currency-from"
-                id="currency-from"
-                value={currentFromId ?? ''}
-                onChange={(e) => {
-                    setCurrentFromId(e.currentTarget.value);
-                }}
-            >
-                {currencies.map((currency) => (
-                    <option key={currency.id} value={currency.id}>
-                        {currency.id}-{currency.currencyName}
-                    </option>
-                ))}
-            </select>
+                <label className={styles.formControl} htmlFor="converter-form-currency-from">
+                    <span className={styles.formLabel}>Конвертировать из</span>
+                    <select
+                        id="converter-form-currency-from"
+                        value={currentFromId ?? ''}
+                        className={styles.currencySelect}
+                        onChange={(e) => {
+                            setCurrentFromId(e.currentTarget.value);
+                        }}
+                    >
+                        {currencies.length === 0 && (
+                            <option disabled selected>
+                                Загрузка...
+                            </option>
+                        )}
+                        {currencies.map((currency) => (
+                            <option key={currency.id} value={currency.id}>
+                                {currency.id}-{currency.currencyName}
+                            </option>
+                        ))}
+                    </select>
+                </label>
 
-            <button type="button" title="Поменять валюты местами" onClick={switchCurrencies}>
-                <img src={switchLogo} alt="Поменять валюты местами" />
-            </button>
+                <div className={styles.buttonContainer}>
+                    <button
+                        className={styles.switchButton}
+                        type="button"
+                        title="Поменять валюты местами"
+                        onClick={switchCurrencies}
+                    >
+                        <SwitchLogo />
+                    </button>
+                </div>
 
-            <select
-                name="currency-from"
-                id="currency-from"
-                value={currentToId ?? ''}
-                onChange={(e) => {
-                    setCurrentToId(e.currentTarget.value);
-                }}
-            >
-                {currencies.map((currency) => (
-                    <option key={currency.id} value={currency.id}>
-                        {currency.id}-{currency.currencyName}
-                    </option>
-                ))}
-            </select>
-            {currentPairRates !== null && <p>{Number(inputValue) * currentPairRates}</p>}
-        </form>
+                <label className={styles.formControl} htmlFor="converter-form-currency-to">
+                    <span className={styles.formLabel}>Конвертировать в</span>
+                    <select
+                        id="converter-form-currency-to"
+                        value={currentToId ?? ''}
+                        className={styles.currencySelect}
+                        onChange={(e) => {
+                            setCurrentToId(e.currentTarget.value);
+                        }}
+                    >
+                        {currencies.length === 0 && (
+                            <option disabled selected>
+                                Загрузка...
+                            </option>
+                        )}
+                        {currencies.map((currency) => (
+                            <option key={currency.id} value={currency.id}>
+                                {currency.id}-{currency.currencyName}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+            </div>
+
+            {currentPairRates !== null && (
+                <div>
+                    <p>
+                        {inputValue}&nbsp;{currentFromId} ={' '}
+                        {formatFloat(Number(inputValue) * currentPairRates)}
+                        &nbsp;{currentToId}
+                    </p>
+                    <p>
+                        1&nbsp;{currentFromId} = {formatFloat(currentPairRates)}
+                        &nbsp;{currentToId}
+                    </p>
+                </div>
+            )}
+        </fieldset>
     );
 };
