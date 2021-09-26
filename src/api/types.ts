@@ -6,4 +6,11 @@ export namespace ApiTypes {
     export type GetCurrenciesResponse = {
         results: Record<CurrencyCode, Currency>;
     };
+
+    // [GET] /api/v7/convert
+    export type ConvertCurrenciesRequest = {
+        q: string;
+        compact: string;
+    };
+    export type ConvertCurrenciesResponse = Record<string, number>;
 }
