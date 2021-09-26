@@ -38,10 +38,12 @@ export const ConverterForm: FC = () => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
 
-        fetchCurrencyPairRatesFx({
-            q: `${currencyFrom}_${currencyTo},${currencyTo}_${currencyFrom}`,
-            compact: 'ultra',
-        });
+        if (currentRatePair !== null && rates[currentRatePair] === undefined) {
+            fetchCurrencyPairRatesFx({
+                q: `${currencyFrom}_${currencyTo},${currencyTo}_${currencyFrom}`,
+                compact: 'ultra',
+            });
+        }
     };
 
     return (
@@ -88,7 +90,7 @@ export const ConverterForm: FC = () => {
                 Конвертировать
             </button>
             {currentRatePair !== null && rates[currentRatePair] !== undefined && (
-                <p>{Number(inputValue) * rates[`${currencyFrom}_${currencyTo}`]}</p>
+                <p>{Number(inputValue) * rates[currentRatePair]}</p>
             )}
         </form>
     );
