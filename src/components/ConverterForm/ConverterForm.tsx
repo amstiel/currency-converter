@@ -1,49 +1,39 @@
 import React, { FC, FormEvent, useEffect, useState } from 'react';
 import { useStore } from 'effector-react';
 
+import {
+    $currentPairRates,
+    $rates,
+    setCurrentCurrencyPair,
+    setCurrentFromId,
+    setCurrentToId,
+} from '../../store/rates';
 import { $currencies, fetchCurrenciesFx } from '../../store/currencies';
-import { $rates, fetchCurrencyPairRatesFx } from '../../store/rates';
 
 import switchLogo from '../../assets/icons/switch.svg';
 
 export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
-    const { rates } = useStore($rates);
-    const [currencyFrom, setCurrencyFrom] = useState<string>('');
-    const [currencyTo, setCurrencyTo] = useState<string>('');
-    const [currentRatePair, setCurrentRatePair] = useState<string | null>(null);
+    const { currentFromId, currentToId } = useStore($rates);
+    const currentPairRates = useStore($currentPairRates);
+
     const [inputValue, setInputValue] = useState<number>(1);
 
     const switchCurrencies = (): void => {
-        const prevCurrencyTo = currencyTo;
-        setCurrencyFrom(prevCurrencyTo);
-        setCurrencyTo(currencyFrom);
+        if (currentFromId === null || currentToId === null) return;
+
+        setCurrentCurrencyPair({
+            from: currentToId,
+            to: currentFromId,
+        });
     };
 
     useEffect(() => {
         fetchCurrenciesFx();
     }, []);
 
-    useEffect(() => {
-        if (currencies.length > 0) {
-            setCurrencyFrom(currencies[0].id);
-            setCurrencyTo(currencies[1].id);
-        }
-    }, [currencies]);
-
-    useEffect(() => {
-        setCurrentRatePair(`${currencyFrom}_${currencyTo}`);
-    }, [currencyFrom, currencyTo]);
-
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-
-        if (currentRatePair !== null && rates[currentRatePair] === undefined) {
-            fetchCurrencyPairRatesFx({
-                q: `${currencyFrom}_${currencyTo},${currencyTo}_${currencyFrom}`,
-                compact: 'ultra',
-            });
-        }
     };
 
     return (
@@ -55,12 +45,13 @@ export const ConverterForm: FC = () => {
                     setInputValue(Number(e.currentTarget.value));
                 }}
             />
+
             <select
                 name="currency-from"
                 id="currency-from"
-                value={currencyFrom}
+                value={currentFromId ?? ''}
                 onChange={(e) => {
-                    setCurrencyFrom(e.currentTarget.value);
+                    setCurrentFromId(e.currentTarget.value);
                 }}
             >
                 {currencies.map((currency) => (
@@ -69,15 +60,17 @@ export const ConverterForm: FC = () => {
                     </option>
                 ))}
             </select>
+
             <button type="button" title="Поменять валюты местами" onClick={switchCurrencies}>
                 <img src={switchLogo} alt="Поменять валюты местами" />
             </button>
+
             <select
                 name="currency-from"
                 id="currency-from"
-                value={currencyTo}
+                value={currentToId ?? ''}
                 onChange={(e) => {
-                    setCurrencyTo(e.currentTarget.value);
+                    setCurrentToId(e.currentTarget.value);
                 }}
             >
                 {currencies.map((currency) => (
@@ -86,12 +79,7 @@ export const ConverterForm: FC = () => {
                     </option>
                 ))}
             </select>
-            <button type="submit" disabled={rates[`${currencyFrom}_${currencyTo}`] !== undefined}>
-                Конвертировать
-            </button>
-            {currentRatePair !== null && rates[currentRatePair] !== undefined && (
-                <p>{Number(inputValue) * rates[currentRatePair]}</p>
-            )}
+            {currentPairRates !== null && <p>{Number(inputValue) * currentPairRates}</p>}
         </form>
     );
 };

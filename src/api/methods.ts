@@ -6,6 +6,7 @@ if (apiKey === '' || apiKey === undefined) throw new Error('Add valid ApiKey in 
 
 const apiClient = new ApiClient('https://free.currconv.com', apiKey);
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const apiGetCurrenciesList = () =>
     apiClient.get<ApiTypes.GetCurrenciesRequest, ApiTypes.GetCurrenciesResponse>(
         '/api/v7/currencies'
@@ -16,3 +17,4 @@ export const apiConvertCurrencies = (payload: ApiTypes.ConvertCurrenciesRequest)
         '/api/v7/convert',
         payload
     );
+/* eslint-enable @typescript-eslint/explicit-module-boundary-types */
