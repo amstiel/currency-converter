@@ -4,6 +4,6 @@ export namespace ApiTypes {
     // [GET] /api/v7/currencies
     export type GetCurrenciesRequest = void;
     export type GetCurrenciesResponse = {
-        results: Currency[];
+        results: Record<CurrencyCode, Currency>;
     };
 }

@@ -1,5 +1,4 @@
-export type Currency = Record<CurrencyCode, CurrencyDetails>;
-export type CurrencyDetails = {
+export type Currency = {
     id: string;
     currencyName: string;
     currencySymbol?: string;
