@@ -111,3 +111,7 @@ $rates.watch($currencies.updates, (state, { currencies }) => {
 export const $currentPairRates = $rates.map(
     (state) => state.rates[`${state.currentFromId}_${state.currentToId}`] ?? null
 );
+
+export const $currentInvertedPairRates = $rates.map(
+    (state) => state.rates[`${state.currentToId}_${state.currentFromId}`] ?? null
+);
