@@ -13,3 +13,9 @@ type Opaque<T, S extends symbol> = Tag.OpaqueType<T, S>;
 
 declare const CurrencyCodeTag: symbol;
 type CurrencyCode = Opaque<string, typeof CurrencyCodeTag>;
+
+declare const CurrencyPairKeyTag: symbol;
+type CurrencyPairKey = Opaque<string, typeof CurrencyPairKeyTag>;
+
+declare const DateTag: symbol;
+type ApiDate = Opaque<string, typeof DateTag>;

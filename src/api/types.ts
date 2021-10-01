@@ -1,4 +1,4 @@
-import { Currency } from '../types/currency';
+import { ConversionRate, Currency } from '../types/currency';
 
 export namespace ApiTypes {
     // [GET] /api/v7/currencies
@@ -11,6 +11,8 @@ export namespace ApiTypes {
     export type ConvertCurrenciesRequest = {
         q: string;
         compact: string;
+        date?: string;
+        endDate?: string;
     };
-    export type ConvertCurrenciesResponse = Record<string, number>;
+    export type ConvertCurrenciesResponse = Record<CurrencyPairKey, ConversionRate>;
 }

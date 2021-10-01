@@ -1,9 +1,13 @@
 import { createDomain } from 'effector';
+import { subDays } from 'date-fns';
 import { ApiTypes } from '../api/types';
 import { apiConvertCurrencies } from '../api/methods';
 import { $currencies } from './currencies';
+import { formatDateToApiDate } from '../utils/date';
+import { ConversionRate } from '../types/currency';
 
 const ratesDomain = createDomain();
+const today = new Date();
 
 const getCurrencyPairPayload = (
     currencyFrom: string,
@@ -11,6 +15,8 @@ const getCurrencyPairPayload = (
 ): ApiTypes.ConvertCurrenciesRequest => ({
     q: `${currencyFrom}_${currencyTo},${currencyTo}_${currencyFrom}`,
     compact: 'ultra',
+    endDate: formatDateToApiDate(today),
+    date: formatDateToApiDate(subDays(today, 8)),
 });
 
 const getCurrencyPairKey = (currencyFrom: string, currencyTo: string): string =>
@@ -31,7 +37,7 @@ type RatesState = {
     currentFromId: string | null;
     currentToId: string | null;
     currentCurrencyPairKey: string | null;
-    rates: Record<string, number>;
+    rates: Record<CurrencyPairKey, ConversionRate>;
 };
 
 const initialRatesState: RatesState = {
@@ -44,7 +50,7 @@ const initialRatesState: RatesState = {
 export const $rates = ratesDomain
     .createStore(initialRatesState)
     .on(setCurrentCurrencyPair, (state, { from, to }) => {
-        const newCurrencyPairKey = getCurrencyPairKey(from, to);
+        const newCurrencyPairKey = getCurrencyPairKey(from, to) as CurrencyPairKey;
 
         if (state.rates[newCurrencyPairKey] === undefined) {
             fetchCurrencyPairRatesFx(getCurrencyPairPayload(from, to));
@@ -90,8 +96,8 @@ export const $rates = ratesDomain
         rateEntries.forEach((entry) => {
             const [pairKey, conversionRate] = entry;
 
-            if (newRates[pairKey] === undefined) {
-                newRates[pairKey] = conversionRate;
+            if (newRates[pairKey as CurrencyPairKey] === undefined) {
+                newRates[pairKey as CurrencyPairKey] = conversionRate;
             }
         });
 
@@ -108,10 +114,16 @@ $rates.watch($currencies.updates, (state, { currencies }) => {
     });
 });
 
-export const $currentPairRates = $rates.map(
-    (state) => state.rates[`${state.currentFromId}_${state.currentToId}`] ?? null
-);
+export const $currentPairTodayRate = $rates.map((state) => {
+    const rates = state.rates[`${state.currentFromId}_${state.currentToId}` as CurrencyPairKey];
+    return rates === undefined ? null : rates[formatDateToApiDate(today)];
+});
 
-export const $currentInvertedPairRates = $rates.map(
-    (state) => state.rates[`${state.currentToId}_${state.currentFromId}`] ?? null
+export const $currentInvertedPairTodayRate = $rates.map((state) => {
+    const rates = state.rates[`${state.currentToId}_${state.currentFromId}` as CurrencyPairKey];
+    return rates === undefined ? null : rates[formatDateToApiDate(today)];
+});
+
+export const $currentPairRates = $rates.map(
+    (state) => state.rates[`${state.currentFromId}_${state.currentToId}` as CurrencyPairKey]
 );

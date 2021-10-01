@@ -2,7 +2,7 @@ import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { useStore } from 'effector-react';
 
 import {
-    $currentPairRates,
+    $currentPairTodayRate,
     $rates,
     setCurrentCurrencyPair,
     setCurrentFromId,
@@ -17,7 +17,7 @@ import { formatFloat } from '../../utils/strings';
 export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
     const { currentFromId, currentToId } = useStore($rates);
-    const currentPairRates = useStore($currentPairRates);
+    const currentPairRates = useStore($currentPairTodayRate);
 
     const [inputValue, setInputValue] = useState<number>(1);
 

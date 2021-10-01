@@ -1,18 +1,19 @@
 import React, { FC } from 'react';
 import { useStore } from 'effector-react';
 
-import { $currentInvertedPairRates, $currentPairRates, $rates } from './store/rates';
+import { $currentInvertedPairTodayRate, $currentPairTodayRate, $rates } from './store/rates';
 import { ConverterForm } from './components/ConverterForm/ConverterForm';
 import { AppHeader } from './components/AppHeader/AppHeader';
 import { Container } from './components/Container/Container';
 import { RatesList } from './components/RatesList/RatesList';
 
 import styles from './App.module.scss';
+import { Chart } from './components/Chart/Chart';
 
 export const App: FC = () => {
     const { currentFromId, currentToId } = useStore($rates);
-    const currentPairRates = useStore($currentPairRates);
-    const currentInvertedPairRates = useStore($currentInvertedPairRates);
+    const currentPairRates = useStore($currentPairTodayRate);
+    const currentInvertedPairRates = useStore($currentInvertedPairTodayRate);
 
     return (
         <main className="App">
@@ -27,15 +28,19 @@ export const App: FC = () => {
                     <RatesList
                         currencyFromId={currentFromId}
                         currencyToId={currentToId}
-                        conversionRate={currentPairRates}
+                        conversionRate={currentPairRates ?? 0}
                     />
 
                     <RatesList
                         currencyFromId={currentToId}
                         currencyToId={currentFromId}
-                        conversionRate={currentInvertedPairRates}
+                        conversionRate={currentInvertedPairRates ?? 0}
                     />
                 </div>
+            </Container>
+
+            <Container>
+                <Chart />
             </Container>
         </main>
     );
