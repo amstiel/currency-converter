@@ -47,5 +47,13 @@ module.exports = {
         '@typescript-eslint/no-throw-literal': 'off',
         'react/prop-types': 'off',
         'react/jsx-props-no-spreading': 'off',
+        'jsx-a11y/label-has-associated-control': [
+            2,
+            {
+                required: {
+                    some: ['nesting', 'id'],
+                },
+            },
+        ],
     },
 };
