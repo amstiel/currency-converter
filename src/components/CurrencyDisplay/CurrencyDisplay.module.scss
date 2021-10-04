@@ -1,0 +1,30 @@
+.root {
+    margin-top: 16px;
+
+    strong {
+        font-weight: 500;
+    }
+
+    @media (max-width: 700px) {
+        margin-top: 24px;
+    }
+}
+
+.amount {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.convertedAmount {
+    margin: 2px 0 0;
+    font-size: 24px;
+    line-height: 1.4;
+}
+
+.perOneDisplay {
+    margin: 16px 0 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #6e737d;
+}

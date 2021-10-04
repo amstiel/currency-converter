@@ -4,17 +4,15 @@ import { useStore } from 'effector-react';
 import {
     $currentPairTodayRate,
     $rates,
-    fetchCurrencyPairRatesFx,
     setCurrentCurrencyPair,
     setCurrentFromId,
     setCurrentToId,
 } from '../../store/rates';
 import { $currencies, fetchCurrenciesFx } from '../../store/currencies';
-import { formatFloat } from '../../utils/strings';
 import { Paper } from '../Paper/Paper';
 import { setErrorCaption } from '../../store/error';
 import { StyledSelect } from '../StyledSelect/StyledSelect';
-import { Skeleton } from '../Skeleton/Skeleton';
+import { CurrencyDisplay } from '../CurrencyDisplay/CurrencyDisplay';
 
 import { ReactComponent as SwitchLogo } from '../../assets/icons/switch.svg';
 import styles from './ConverterForm.module.scss';
@@ -23,9 +21,7 @@ export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
     const { currentFromId, currentToId } = useStore($rates);
     const currentPairRates = useStore($currentPairTodayRate);
-    const [inputValue, setInputValue] = useState<number>(1);
-
-    const isFetching = useStore(fetchCurrencyPairRatesFx.pending);
+    const [inputValue, setInputValue] = useState<number>(10);
 
     const switchCurrencies = (): void => {
         if (currentFromId === null || currentToId === null) return;
@@ -91,40 +87,7 @@ export const ConverterForm: FC = () => {
                 </div>
 
                 {currentPairRates !== null && (
-                    <div className={styles.currencyDisplayWrapper}>
-                        <div className={styles.inputAmountDisplay}>
-                            {isFetching ? (
-                                <Skeleton width={100} />
-                            ) : (
-                                <span>
-                                    {inputValue}&nbsp;<strong>USD</strong> =
-                                </span>
-                            )}
-                        </div>
-
-                        <div className={styles.inputConvertedDisplay}>
-                            {isFetching ? (
-                                <Skeleton width={150} />
-                            ) : (
-                                <span>
-                                    {formatFloat(Number(inputValue) * currentPairRates)}
-                                    &nbsp;<strong>{currentToId}</strong>
-                                </span>
-                            )}
-                        </div>
-
-                        <div className={styles.perOneDisplay}>
-                            {isFetching ? (
-                                <Skeleton width={120} />
-                            ) : (
-                                <span>
-                                    1&nbsp;<strong>USD</strong> = {formatFloat(currentPairRates)}
-                                    &nbsp;
-                                    <strong>{currentToId}</strong>
-                                </span>
-                            )}
-                        </div>
-                    </div>
+                    <CurrencyDisplay currentPairRates={currentPairRates} value={inputValue} />
                 )}
             </fieldset>
         </Paper>
