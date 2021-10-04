@@ -4,6 +4,7 @@ import { useStore } from 'effector-react';
 import {
     $currentPairTodayRate,
     $rates,
+    fetchCurrencyPairRatesFx,
     setCurrentCurrencyPair,
     setCurrentFromId,
     setCurrentToId,
@@ -13,6 +14,7 @@ import { formatFloat } from '../../utils/strings';
 import { Paper } from '../Paper/Paper';
 import { setErrorCaption } from '../../store/error';
 import { StyledSelect } from '../StyledSelect/StyledSelect';
+import { Skeleton } from '../Skeleton/Skeleton';
 
 import { ReactComponent as SwitchLogo } from '../../assets/icons/switch.svg';
 import styles from './ConverterForm.module.scss';
@@ -21,8 +23,9 @@ export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
     const { currentFromId, currentToId } = useStore($rates);
     const currentPairRates = useStore($currentPairTodayRate);
-
     const [inputValue, setInputValue] = useState<number>(1);
+
+    const isFetching = useStore(fetchCurrencyPairRatesFx.pending);
 
     const switchCurrencies = (): void => {
         if (currentFromId === null || currentToId === null) return;
@@ -33,16 +36,16 @@ export const ConverterForm: FC = () => {
         });
     };
 
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        const newVal = Number(e.currentTarget.value);
+        setInputValue(newVal < 0 ? Math.abs(newVal) : newVal);
+    };
+
     useEffect(() => {
         fetchCurrenciesFx().catch(() => {
             setErrorCaption('Ошибка при загрузке списка валют');
         });
     }, []);
-
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-        const newVal = Number(e.currentTarget.value);
-        setInputValue(newVal < 0 ? Math.abs(newVal) : newVal);
-    };
 
     return (
         <Paper>
@@ -88,16 +91,39 @@ export const ConverterForm: FC = () => {
                 </div>
 
                 {currentPairRates !== null && (
-                    <div>
-                        <p>
-                            {inputValue}&nbsp;{currentFromId} ={' '}
-                            {formatFloat(Number(inputValue) * currentPairRates)}
-                            &nbsp;{currentToId}
-                        </p>
-                        <p>
-                            1&nbsp;{currentFromId} = {formatFloat(currentPairRates)}
-                            &nbsp;{currentToId}
-                        </p>
+                    <div className={styles.currencyDisplayWrapper}>
+                        <div className={styles.inputAmountDisplay}>
+                            {isFetching ? (
+                                <Skeleton width={100} />
+                            ) : (
+                                <span>
+                                    {inputValue}&nbsp;<strong>USD</strong> =
+                                </span>
+                            )}
+                        </div>
+
+                        <div className={styles.inputConvertedDisplay}>
+                            {isFetching ? (
+                                <Skeleton width={150} />
+                            ) : (
+                                <span>
+                                    {formatFloat(Number(inputValue) * currentPairRates)}
+                                    &nbsp;<strong>{currentToId}</strong>
+                                </span>
+                            )}
+                        </div>
+
+                        <div className={styles.perOneDisplay}>
+                            {isFetching ? (
+                                <Skeleton width={120} />
+                            ) : (
+                                <span>
+                                    1&nbsp;<strong>USD</strong> = {formatFloat(currentPairRates)}
+                                    &nbsp;
+                                    <strong>{currentToId}</strong>
+                                </span>
+                            )}
+                        </div>
                     </div>
                 )}
             </fieldset>
