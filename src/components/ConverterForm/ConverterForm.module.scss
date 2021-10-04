@@ -55,11 +55,3 @@
     grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) auto minmax(100px, 1fr);
     grid-gap: 24px;
 }
-
-.currencySelect {
-    @include elements.input;
-
-    option {
-        font-size: 12px;
-    }
-}

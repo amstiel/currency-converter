@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import { useStore } from 'effector-react';
+
 import { Paper } from '../Paper/Paper';
 import { formatFloat } from '../../utils/strings';
-
-import styles from './RatesList.module.scss';
 import { Skeleton } from '../Skeleton/Skeleton';
 import { fetchCurrencyPairRatesFx } from '../../store/rates';
+
+import styles from './RatesList.module.scss';
 
 const multipliers = [1, 5, 10, 25, 50, 100, 500, 1000, 5000];
 

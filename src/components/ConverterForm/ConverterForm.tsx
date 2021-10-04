@@ -9,12 +9,13 @@ import {
     setCurrentToId,
 } from '../../store/rates';
 import { $currencies, fetchCurrenciesFx } from '../../store/currencies';
-
-import styles from './ConverterForm.module.scss';
-import { ReactComponent as SwitchLogo } from '../../assets/icons/switch.svg';
 import { formatFloat } from '../../utils/strings';
 import { Paper } from '../Paper/Paper';
 import { setErrorCaption } from '../../store/error';
+import { StyledSelect } from '../StyledSelect/StyledSelect';
+
+import { ReactComponent as SwitchLogo } from '../../assets/icons/switch.svg';
+import styles from './ConverterForm.module.scss';
 
 export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
@@ -58,28 +59,13 @@ export const ConverterForm: FC = () => {
                         />
                     </label>
 
-                    <label className={styles.formControl} htmlFor="converter-form-currency-from">
-                        <span className={styles.formLabel}>Конвертировать из</span>
-                        <select
-                            id="converter-form-currency-from"
-                            value={currentFromId ?? ''}
-                            className={styles.currencySelect}
-                            onChange={(e) => {
-                                setCurrentFromId(e.currentTarget.value);
-                            }}
-                        >
-                            {currencies.length === 0 && (
-                                <option disabled selected>
-                                    Загрузка...
-                                </option>
-                            )}
-                            {currencies.map((currency) => (
-                                <option key={currency.id} value={currency.id}>
-                                    {currency.id}-{currency.currencyName}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
+                    <StyledSelect
+                        id="converter-form-currency-from"
+                        value={currentFromId}
+                        onChange={setCurrentFromId}
+                        label="Конвертировать из"
+                        currencies={currencies}
+                    />
 
                     <div className={styles.buttonContainer}>
                         <button
@@ -92,28 +78,13 @@ export const ConverterForm: FC = () => {
                         </button>
                     </div>
 
-                    <label className={styles.formControl} htmlFor="converter-form-currency-to">
-                        <span className={styles.formLabel}>Конвертировать в</span>
-                        <select
-                            id="converter-form-currency-to"
-                            value={currentToId ?? ''}
-                            className={styles.currencySelect}
-                            onChange={(e) => {
-                                setCurrentToId(e.currentTarget.value);
-                            }}
-                        >
-                            {currencies.length === 0 && (
-                                <option disabled selected>
-                                    Загрузка...
-                                </option>
-                            )}
-                            {currencies.map((currency) => (
-                                <option key={currency.id} value={currency.id}>
-                                    {currency.id}-{currency.currencyName}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
+                    <StyledSelect
+                        id="converter-form-currency-to"
+                        value={currentToId}
+                        onChange={setCurrentToId}
+                        label="Конвертировать в"
+                        currencies={currencies}
+                    />
                 </div>
 
                 {currentPairRates !== null && (

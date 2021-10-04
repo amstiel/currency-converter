@@ -28,6 +28,7 @@ export const AppHeader: FC = () => {
                                 type="checkbox"
                                 id="converter-visibility-checkbox"
                                 checked={isConverterVisible}
+                                onChange={() => {}}
                             />
                             <label htmlFor="converter-visibility-checkbox">
                                 <ConvertIcon />
