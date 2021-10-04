@@ -1,6 +1,12 @@
 import React, { FC } from 'react';
+import clsx from 'clsx';
+
 import styles from './Container.module.scss';
 
-export const Container: FC = ({ children }) => (
-    <section className={styles.root}>{children}</section>
+type Props = {
+    className?: string;
+};
+
+export const Container: FC<Props> = ({ children, className }) => (
+    <section className={clsx(styles.root, className)}>{children}</section>
 );
