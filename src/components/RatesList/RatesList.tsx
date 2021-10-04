@@ -1,8 +1,11 @@
 import React, { FC } from 'react';
+import { useStore } from 'effector-react';
 import { Paper } from '../Paper/Paper';
 import { formatFloat } from '../../utils/strings';
 
 import styles from './RatesList.module.scss';
+import { Skeleton } from '../Skeleton/Skeleton';
+import { fetchCurrencyPairRatesFx } from '../../store/rates';
 
 const multipliers = [1, 5, 10, 25, 50, 100, 500, 1000, 5000];
 
@@ -14,19 +17,40 @@ type Props = {
 
 export const RatesList: FC<Props> = (props) => {
     const { currencyFromId, currencyToId, conversionRate } = props;
+    const isFetching = useStore(fetchCurrencyPairRatesFx.pending);
+
+    const isLoading = isFetching || currencyToId === null || currencyFromId === null;
+
     return (
-        <Paper title={`Конверсия ${currencyFromId} в ${currencyToId}`}>
+        <Paper
+            title={
+                isLoading ? 'Загрузка курсов...' : `Конверсия ${currencyFromId} в ${currencyToId}`
+            }
+        >
             <table className={styles.table}>
                 <tbody>
                     {multipliers.map((multiplier) => (
-                        <tr>
+                        <tr key={multiplier}>
                             <td className={styles.currencyFromCell}>
-                                <span>{multiplier} </span>
-                                <strong>{currencyFromId}</strong>
+                                {isLoading ? (
+                                    <Skeleton width={70} />
+                                ) : (
+                                    <>
+                                        <span>{multiplier} </span>
+                                        <strong>{currencyFromId}</strong>
+                                    </>
+                                )}
                             </td>
+
                             <td className={styles.currencyToCell}>
-                                <span>{formatFloat(multiplier * conversionRate)} </span>
-                                <strong>{currencyToId}</strong>
+                                {isLoading ? (
+                                    <Skeleton width={70} />
+                                ) : (
+                                    <>
+                                        <span>{formatFloat(multiplier * conversionRate)} </span>
+                                        <strong>{currencyToId}</strong>
+                                    </>
+                                )}
                             </td>
                         </tr>
                     ))}
