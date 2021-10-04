@@ -1,10 +1,10 @@
-# Getting Started with Create React App
+# Convert
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Simple currency converter app.
 
 ## Available Scripts
 
-In the project directory, you can run:
+Since this project was bootstrapped with CRA, you can run:
 
 ### `yarn start`
 
