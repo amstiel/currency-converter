@@ -75,4 +75,12 @@
         color: white;
         margin-left: 8px;
     }
+
+    @media (max-width: 500px) {
+        font-size: 12px;
+    }
+
+    @media (max-width: 350px) {
+        font-size: 10px;
+    }
 }

@@ -4,9 +4,6 @@
     background-color: white;
     border: none;
     padding: 0;
-    //border: 1px solid #cdcfd4;
-    //border-radius: 5px;
-    //padding: 48px;
     margin: 0;
 }
 
@@ -22,10 +19,18 @@
     svg {
         width: 18px;
     }
+
+    @media (max-width: 700px) {
+        width: 80px;
+    }
 }
 
 .buttonContainer {
     margin-top: 23px;
+
+    @media (max-width: 700px) {
+        margin-top: 0;
+    }
 }
 
 .amountInput {
@@ -54,4 +59,8 @@
     display: grid;
     grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) auto minmax(100px, 1fr);
     grid-gap: 24px;
+
+    @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+    }
 }
