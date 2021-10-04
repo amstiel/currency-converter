@@ -14,6 +14,7 @@ import styles from './ConverterForm.module.scss';
 import { ReactComponent as SwitchLogo } from '../../assets/icons/switch.svg';
 import { formatFloat } from '../../utils/strings';
 import { Paper } from '../Paper/Paper';
+import { setErrorCaption } from '../../store/error';
 
 export const ConverterForm: FC = () => {
     const { currencies } = useStore($currencies);
@@ -32,7 +33,9 @@ export const ConverterForm: FC = () => {
     };
 
     useEffect(() => {
-        fetchCurrenciesFx();
+        fetchCurrenciesFx().catch(() => {
+            setErrorCaption('Ошибка при загрузке списка валют');
+        });
     }, []);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {

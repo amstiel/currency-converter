@@ -5,6 +5,7 @@ import { apiConvertCurrencies } from '../api/methods';
 import { $currencies } from './currencies';
 import { formatDateToApiDate } from '../utils/date';
 import { ConversionRate } from '../types/currency';
+import { setErrorCaption } from './error';
 
 const ratesDomain = createDomain();
 const today = new Date();
@@ -53,7 +54,9 @@ export const $rates = ratesDomain
         const newCurrencyPairKey = getCurrencyPairKey(from, to) as CurrencyPairKey;
 
         if (state.rates[newCurrencyPairKey] === undefined) {
-            fetchCurrencyPairRatesFx(getCurrencyPairPayload(from, to));
+            fetchCurrencyPairRatesFx(getCurrencyPairPayload(from, to)).catch(() => {
+                setErrorCaption('Ошибка при загрузке курсов валют');
+            });
         }
 
         return {
