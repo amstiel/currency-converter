@@ -45,15 +45,16 @@ export const Chart: FC = () => {
                         <LineChart
                             data={mappedRates}
                             margin={{
-                                top: 5,
-                                right: 25,
-                                left: -30,
-                                bottom: 5,
+                                top: 4,
+                                right: 24,
+                                left: 24,
+                                bottom: 4,
                             }}
                         >
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="date" />
                             <YAxis
+                                hide
                                 allowDecimals={false}
                                 domain={['dataMin - 0.25', 'dataMax + 0.25']}
                             />
