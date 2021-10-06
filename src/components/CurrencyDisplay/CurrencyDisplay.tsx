@@ -8,7 +8,7 @@ import styles from './CurrencyDisplay.module.scss';
 
 type Props = {
     value: number;
-    currentPairRates: number;
+    currentPairRates: number | null;
 };
 
 export const CurrencyDisplay: FC<Props> = (props) => {
@@ -16,10 +16,12 @@ export const CurrencyDisplay: FC<Props> = (props) => {
     const { currentFromId, currentToId } = useStore($rates);
     const isFetching = useStore(fetchCurrencyPairRatesFx.pending);
 
+    const isLoading = isFetching || currentPairRates === null;
+
     return (
         <div className={styles.root}>
             <div className={styles.amount}>
-                {isFetching ? (
+                {isLoading ? (
                     <Skeleton width={100} />
                 ) : (
                     <span>
@@ -29,7 +31,7 @@ export const CurrencyDisplay: FC<Props> = (props) => {
             </div>
 
             <div className={styles.convertedAmount}>
-                {isFetching ? (
+                {isLoading ? (
                     <Skeleton width={150} />
                 ) : (
                     <span>
@@ -40,7 +42,7 @@ export const CurrencyDisplay: FC<Props> = (props) => {
             </div>
 
             <div className={styles.perOneDisplay}>
-                {isFetching ? (
+                {isLoading ? (
                     <Skeleton width={120} />
                 ) : (
                     <span>

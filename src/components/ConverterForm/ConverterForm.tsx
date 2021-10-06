@@ -86,9 +86,7 @@ export const ConverterForm: FC = () => {
                     />
                 </div>
 
-                {currentPairRates !== null && (
-                    <CurrencyDisplay currentPairRates={currentPairRates} value={inputValue} />
-                )}
+                <CurrencyDisplay currentPairRates={currentPairRates} value={inputValue} />
             </fieldset>
         </Paper>
     );
